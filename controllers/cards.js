@@ -54,7 +54,7 @@ module.exports.likeCard = (req, res) => {
 }
 
 module.exports.dislikeCard = (req, res) => {
-  ard.findByIdAndUpdate(
+  Сard.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
