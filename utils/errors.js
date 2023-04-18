@@ -3,7 +3,7 @@ const INTERNAL_SERVER_ERROR = 500;
 const NOT_FOUND = 404;
 
 function handleErrors (error, response) {
-  if (error instanceof CastError || error instanceof ValidationError) {
+  if (error.name === 'CastError' || error.name === 'ValidationError') {
     return response.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
   }
 
