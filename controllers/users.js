@@ -5,9 +5,16 @@ module.exports.getUserById = (req, res) => {
   const _id = req.params.userId
   User.findById({ _id })
     .then(user => {
-      handleErrorNotFound(user, res, "Пользователь по указанному _id не найден.")
-      res.status(200).send({ data: user })
+      !user
+        ? handleErrorNotFound(res, "Пользователь по указанному id не найден")
+        : res.status(200).send({ data: user })
     })
+    .catch((err) => handleErrors(err, res));
+};
+
+module.exports.getUsers = (req, res) => {
+  User.find({})
+    .then(users => res.status(200).send({ data: users }))
     .catch((err) => handleErrors(err, res));
 };
 
@@ -18,8 +25,13 @@ module.exports.createUser = (req, res) => {
     .catch((err) => handleErrors(err, res));
 };
 
-module.exports.getUsers = (req, res) => {
-  User.find({})
-    .then(users => res.status(200).send({ data: users }))
+module.exports.updateUserInfo = (req, res) => {
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => {
+      !user
+        ? handleErrorNotFound(res, "Пользователь по указанному id не найден")
+        : res.status(200).send({ data: user })
+    })
     .catch((err) => handleErrors(err, res));
 };

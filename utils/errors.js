@@ -10,10 +10,8 @@ function handleErrors (error, response) {
   return response.status(INTERNAL_SERVER_ERROR).send({ message: `Произошла ошибка ${INTERNAL_SERVER_ERROR}` });
 };
 
-function handleErrorNotFound (obj, response, string){
-  if(!obj){
+function handleErrorNotFound (response, string){
     return response.status(NOT_FOUND).send({ message: string })
-  }
 };
 
 module.exports = {

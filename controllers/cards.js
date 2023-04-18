@@ -1,4 +1,5 @@
 const Card = require('../models/card');
+const {BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, handleErrors, handleErrorNotFound} = require('../utils/errors');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -6,7 +7,7 @@ module.exports.getCards = (req, res) => {
       { path: 'likes', model: 'user' },
       { path: 'owner', model: 'user' }
     ])
-    .then(cards => res.send({ data: cards }))
+    .then(cards => res.status(200).send({ data: cards }))
     .catch((err) => console.log(err, res));
 }
 
@@ -15,8 +16,8 @@ module.exports.createCard = (req, res) => {
   const owner = req.user
   Card.create({ name, link, owner })
     .then(card => card.populate('owner'))
-    .then(card => res.send({ data: card }))
-    .catch((err) => console.log(err, res));
+    .then(card => res.status(201).send({ data: card }))
+    .catch((err) => handleErrors(err, res));
 }
 
 module.exports.deleteCard = (req, res) => {
@@ -27,7 +28,7 @@ module.exports.deleteCard = (req, res) => {
       { path: 'owner', model: 'user' }
     ])
     .then(card => {
-      res.send({ data: card })
+      !card ? handleErrorNotFound(res, "Карточка с указанным id не найдена") : res.send({ data: card })
     })
-    .catch((err) => console.log(err, res));
+    .catch((err) => handleErrors(err, res));
 }
