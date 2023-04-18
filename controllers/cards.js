@@ -8,7 +8,7 @@ module.exports.getCards = (req, res) => {
       { path: 'owner', model: 'user' }
     ])
     .then(cards => res.status(200).send({ data: cards }))
-    .catch((err) => console.log(err, res));
+    .catch((err) => handleErrors(err, res));
 }
 
 module.exports.createCard = (req, res) => {
@@ -29,8 +29,36 @@ module.exports.deleteCard = (req, res) => {
     ])
     .then(card => {
       card
+        ? res.send({ data: card })
+        : handleErrorNotFound(res, "Карточка с указанным id не найдена")
+    })
+    .catch((err) => handleErrors(err, res));
+}
+
+module.exports.likeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.id,
+    { $addToSet: { likes: req.user._id } },
+    { new: true }
+  )
+  .then(card => {
+    card
       ? res.send({ data: card })
       : handleErrorNotFound(res, "Карточка с указанным id не найдена")
-    })
+  })
+    .catch((err) => handleErrors(err, res));
+}
+
+module.exports.dislikeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.id,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  )
+  .then(card => {
+    card
+      ? res.send({ data: card })
+      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
+  })
     .catch((err) => handleErrors(err, res));
 }
