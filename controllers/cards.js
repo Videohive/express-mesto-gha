@@ -1,21 +1,21 @@
 const Card = require('../models/card');
-const {handleErrors, handleErrorNotFound} = require('../utils/errors');
+const { handleErrors, handleErrorNotFound } = require('../utils/errors');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate([
-      { path: 'owner', model: 'user' }
+      { path: 'owner', model: 'user' },
     ])
-    .then(cards => res.send({ data: cards }))
+    .then((cards) => res.send({ data: cards }))
     .catch((err) => handleErrors(err, res));
 };
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user
+  const owner = req.user;
   Card.create({ name, link, owner })
-    .then(card => card.populate('owner'))
-    .then(card => res.status(201).send({ data: card }))
+    .then((card) => card.populate('owner'))
+    .then((card) => res.status(201).send({ data: card }))
     .catch((err) => handleErrors(err, res));
 };
 
@@ -24,12 +24,14 @@ module.exports.deleteCard = (req, res) => {
 
   Card.findByIdAndDelete({ _id })
     .populate([
-      { path: 'owner', model: 'user' }
+      { path: 'owner', model: 'user' },
     ])
-    .then(card => {
-      card
-        ? res.send({ data: card })
-        : handleErrorNotFound(res, "Карточка с указанным id не найдена")
+    .then((card) => {
+      if (card) {
+        res.send({ data: card });
+      } else {
+        handleErrorNotFound(res, 'Карточка с указанным id не найдена');
+      }
     })
     .catch((err) => handleErrors(err, res));
 };
@@ -38,13 +40,15 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-  .then(card => {
-    card
-      ? res.send({ data: card })
-      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
-  })
+    .then((card) => {
+      if (card) {
+        res.send({ data: card });
+      } else {
+        handleErrorNotFound(res, 'Карточка с указанным id не найдена');
+      }
+    })
     .catch((err) => handleErrors(err, res));
 };
 
@@ -52,12 +56,14 @@ module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-  .then(card => {
-    card
-      ? res.send({ data: card })
-      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
-  })
+    .then((card) => {
+      if (card) {
+        res.send({ data: card });
+      } else {
+        handleErrorNotFound(res, 'Карточка с указанным id не найдена');
+      }
+    })
     .catch((err) => handleErrors(err, res));
 };
