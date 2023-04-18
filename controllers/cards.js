@@ -28,7 +28,9 @@ module.exports.deleteCard = (req, res) => {
       { path: 'owner', model: 'user' }
     ])
     .then(card => {
-      !card ? handleErrorNotFound(res, "Карточка с указанным id не найдена") : res.send({ data: card })
+      card
+      ? res.send({ data: card })
+      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
     })
     .catch((err) => handleErrors(err, res));
 }

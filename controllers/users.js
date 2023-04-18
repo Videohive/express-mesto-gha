@@ -5,9 +5,9 @@ module.exports.getUserById = (req, res) => {
   const _id = req.params.userId
   User.findById({ _id })
     .then(user => {
-      !user
-        ? handleErrorNotFound(res, "Пользователь по указанному id не найден")
-        : res.status(200).send({ data: user })
+      user
+        ? res.status(200).send({ data: user })
+        : handleErrorNotFound(res, "Пользователь по указанному id не найден")
     })
     .catch((err) => handleErrors(err, res));
 };
@@ -25,13 +25,26 @@ module.exports.createUser = (req, res) => {
     .catch((err) => handleErrors(err, res));
 };
 
-module.exports.updateUserInfo = (req, res) => {
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .then((user) => {
-      !user
-        ? handleErrorNotFound(res, "Пользователь по указанному id не найден")
-        : res.status(200).send({ data: user })
+const updateUser = (req, res, updateData) => {
+  User.findByIdAndUpdate(
+    req.user._id,
+    updateData,
+    { new: true, runValidators: true },
+  )
+    .then(user => {
+      user
+        ? res.status(200).send({ data: user })
+        : handleErrorNotFound(res, "Пользователь по указанному id не найден")
     })
     .catch((err) => handleErrors(err, res));
+}
+
+module.exports.updateUserInfo = (req, res) => {
+  const { name, about } = req.body
+  updateUser(req, res, { name, about });
+};
+
+module.exports.updateUserAvatar = (req, res) => {
+  const { avatar } = req.body
+  updateUser(req, res, { avatar });
 };
