@@ -9,7 +9,7 @@ module.exports.getCards = (req, res) => {
     ])
     .then(cards => res.status(200).send({ data: cards }))
     .catch((err) => handleErrors(err, res));
-}
+};
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
@@ -18,7 +18,7 @@ module.exports.createCard = (req, res) => {
     .then(card => card.populate('owner'))
     .then(card => res.status(201).send({ data: card }))
     .catch((err) => handleErrors(err, res));
-}
+};
 
 module.exports.deleteCard = (req, res) => {
   const _id = req.params.cardId;
@@ -33,40 +33,32 @@ module.exports.deleteCard = (req, res) => {
         : handleErrorNotFound(res, "Карточка с указанным id не найдена")
     })
     .catch((err) => handleErrors(err, res));
-}
+};
 
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
-    req.params.cardId,
+    req.params.id,
     { $addToSet: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
-    .populate([
-      { path: 'likes', model: 'user' },
-      { path: 'owner', model: 'user' }
-    ])
-    .then(card => {
-      card
-        ? res.send({ data: card })
-        : handleErrorNotFound(res, "Карточка с указанным id не найдена")
-    })
+  .then(card => {
+    card
+      ? res.send({ data: card })
+      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
+  })
     .catch((err) => handleErrors(err, res));
-}
+};
 
 module.exports.dislikeCard = (req, res) => {
-  Сard.findByIdAndUpdate(
-    req.params.cardId,
+  Card.findByIdAndUpdate(
+    req.params.id,
     { $pull: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
-    .populate([
-      { path: 'likes', model: 'user' },
-      { path: 'owner', model: 'user' }
-    ])
-    .then(card => {
-      card
-        ? res.send({ data: card })
-        : handleErrorNotFound(res, "Карточка с указанным id не найдена")
-    })
+  .then(card => {
+    card
+      ? res.send({ data: card })
+      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
+  })
     .catch((err) => handleErrors(err, res));
-}
+};
