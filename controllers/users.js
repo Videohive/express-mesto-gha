@@ -6,7 +6,7 @@ module.exports.getUserById = (req, res) => {
   User.findById({ _id })
     .then(user => {
       user
-        ? res.status(200).send({ data: user })
+        ? res.send({ data: user })
         : handleErrorNotFound(res, "Пользователь по указанному id не найден")
     })
     .catch((err) => handleErrors(err, res));
@@ -14,7 +14,7 @@ module.exports.getUserById = (req, res) => {
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then(users => res.status(200).send({ data: users }))
+    .then(users => res.send({ data: users }))
     .catch((err) => handleErrors(err, res));
 };
 
@@ -33,11 +33,11 @@ const updateUser = (req, res, updateData) => {
   )
     .then(user => {
       user
-        ? res.status(200).send({ data: user })
+        ? res.send({ data: user })
         : handleErrorNotFound(res, "Пользователь по указанному id не найден")
     })
     .catch((err) => handleErrors(err, res));
-}
+};
 
 module.exports.updateUserInfo = (req, res) => {
   const { name, about } = req.body

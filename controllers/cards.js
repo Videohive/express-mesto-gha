@@ -4,10 +4,9 @@ const {handleErrors, handleErrorNotFound} = require('../utils/errors');
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate([
-      { path: 'likes', model: 'user' },
       { path: 'owner', model: 'user' }
     ])
-    .then(cards => res.status(200).send({ data: cards }))
+    .then(cards => res.send({ data: cards }))
     .catch((err) => handleErrors(err, res));
 };
 
