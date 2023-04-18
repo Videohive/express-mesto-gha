@@ -37,28 +37,36 @@ module.exports.deleteCard = (req, res) => {
 
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
-    req.params.id,
+    req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-  .then(card => {
-    card
-      ? res.send({ data: card })
-      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
-  })
+    .populate([
+      { path: 'likes', model: 'user' },
+      { path: 'owner', model: 'user' }
+    ])
+    .then(card => {
+      card
+        ? res.send({ data: card })
+        : handleErrorNotFound(res, "Карточка с указанным id не найдена")
+    })
     .catch((err) => handleErrors(err, res));
 }
 
 module.exports.dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.id,
+  ard.findByIdAndUpdate(
+    req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-  .then(card => {
-    card
-      ? res.send({ data: card })
-      : handleErrorNotFound(res, "Карточка с указанным id не найдена")
-  })
+    .populate([
+      { path: 'likes', model: 'user' },
+      { path: 'owner', model: 'user' }
+    ])
+    .then(card => {
+      card
+        ? res.send({ data: card })
+        : handleErrorNotFound(res, "Карточка с указанным id не найдена")
+    })
     .catch((err) => handleErrors(err, res));
 }
