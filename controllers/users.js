@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const {BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, handleErrors, handleErrorNotFound} = require('../utils/errors');
+const {handleErrors, handleErrorNotFound} = require('../utils/errors');
 
 module.exports.getUserById = (req, res) => {
   const _id = req.params.userId
