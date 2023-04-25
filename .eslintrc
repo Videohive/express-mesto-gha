@@ -8,10 +8,7 @@
       }
     ],
     "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": ["**/*.{test,spec}.{js,jsx,ts,tsx}", "**/webpack.config.js", "**/webpack.config.*.js"]
-      }
+      "error"
     ]
   }
 }
