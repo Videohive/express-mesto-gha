@@ -1,8 +1,13 @@
 const BAD_REQUEST = 400;
 const INTERNAL_SERVER_ERROR = 500;
 const NOT_FOUND = 404;
+const HTTP_STATUS_CONFLICT = 409;
 
 function handleErrors(error, response) {
+  if (error.code === 11000) {
+    return response.status(HTTP_STATUS_CONFLICT).send({ message: 'Пользователь с данным email уже существует' });
+  }
+
   if (error.name === 'CastError' || error.name === 'ValidationError') {
     return response.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
   }
