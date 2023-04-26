@@ -27,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
       { path: 'owner', model: 'user' },
     ])
     .then((card) => {
-      if (!card) handleForbiddenError(res, 'Карточка уже удалена');
+      if (!card) handleErrorNotFound(res, 'Карточка не найдена');
 
       if (card.owner._id.toString() !== req.user._id.toString()) {
         handleForbiddenError(res, 'Вы не можете удалить чужую карточку');
