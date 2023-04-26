@@ -39,6 +39,18 @@ module.exports.createUser = (req, res) => {
   });
 };
 
+module.exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        handleErrorNotFound(res, 'Пользователь не найден');
+      }
+    })
+    .catch((err) => handleErrors(err, res));
+};
+
 const updateUser = (req, res, updateData) => {
   User.findByIdAndUpdate(
     req.user._id,

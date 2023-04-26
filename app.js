@@ -3,9 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routes = require('./routes/index');
-const auth = require('./middlewares/auth');
-
-const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000, BASE_PATH = 'localhost' } = process.env;
 const app = express();
@@ -19,9 +16,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/signin', login);
-app.post('/signup', createUser);
-app.use(auth);
 app.use(routes);
 
 app.use(express.static(path.join(__dirname, 'public')));
