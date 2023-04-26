@@ -37,7 +37,7 @@ module.exports.deleteCard = (req, res) => {
         .populate([
           { path: 'owner', model: 'user' },
         ])
-        .then((card) => { res.send({ data: card }); });
+        .then((deletedCard) => { res.send({ data: deletedCard }); });
     })
     .catch((err) => handleErrors(err, res));
 };
