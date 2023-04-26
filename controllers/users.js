@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { handleErrors, handleErrorNotFound } = require('../utils/errors');
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../utils/constants');
 
 module.exports.getUserById = (req, res) => {
   const _id = req.params.userId;
