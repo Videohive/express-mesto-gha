@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -5,10 +6,10 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const routes = require('./routes/index');
 
-const { PORT = 3000, BASE_PATH = 'localhost' } = process.env;
+const { PORT, BASE_PATH, DB_CONN } = process.env;
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+mongoose.connect(DB_CONN, {
   useNewUrlParser: true,
 })
   .then(() => console.log('Успешное подключение к MongoDB'))

@@ -14,7 +14,7 @@ function handleErrors(error, response) {
     return response.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
   }
 
-  return response.status(INTERNAL_SERVER_ERROR).send({ message: `Произошла ошибка ${INTERNAL_SERVER_ERROR}` });
+  return response.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
 }
 
 function handleErrorNotFound(response, string) {

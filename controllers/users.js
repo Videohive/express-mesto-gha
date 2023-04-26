@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { handleErrors, handleErrorNotFound } = require('../utils/errors');
 
+const { JWT_SECRET } = process.env;
+
 module.exports.getUserById = (req, res) => {
   const _id = req.params.userId;
   User.findById({ _id })
@@ -81,7 +83,7 @@ module.exports.login = (req, res) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       res.send({ token });
