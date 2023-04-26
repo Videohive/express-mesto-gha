@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { handleErrors, handleErrorNotFound } = require('../utils/errors');
@@ -29,7 +30,11 @@ module.exports.createUser = (req, res) => {
     User.create({
       name, about, avatar, email, password: hash,
     })
-      .then((user) => res.status(201).send({ data: user }))
+      .then(() => res.status(201).send({
+        data: {
+          name, about, avatar, email,
+        },
+      }))
       .catch((err) => handleErrors(err, res));
   });
 };
@@ -58,4 +63,16 @@ module.exports.updateUserInfo = (req, res) => {
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   updateUser(req, res, { avatar });
+};
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        expiresIn: '7d',
+      });
+      res.send({ token });
+    })
+    .catch(next);
 };
