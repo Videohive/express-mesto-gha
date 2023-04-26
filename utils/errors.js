@@ -14,10 +14,15 @@ function handleErrorNotFound(response, string) {
   return response.status(NOT_FOUND).send({ message: string });
 }
 
+function handleAuthErr(response, string) {
+  return response.status(401).send({ message: string });
+}
+
 module.exports = {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   handleErrors,
   handleErrorNotFound,
+  handleAuthErr,
 };
