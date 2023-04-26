@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const routes = require('./routes/index');
 
 const { PORT = 3000, BASE_PATH = 'localhost' } = process.env;
@@ -17,6 +18,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(routes);
+
+app.use(errors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
