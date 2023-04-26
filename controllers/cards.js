@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { handleErrors, handleErrorNotFound } = require('../utils/errors');
+const { handleErrors, handleErrorNotFound, handleForbiddenError } = require('../utils/errors');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -22,16 +22,22 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   const _id = req.params.cardId;
 
-  Card.findByIdAndDelete({ _id })
+  Card.findOne({ _id })
     .populate([
       { path: 'owner', model: 'user' },
     ])
     .then((card) => {
-      if (card) {
-        res.send({ data: card });
-      } else {
-        handleErrorNotFound(res, 'Карточка с указанным id не найдена');
+      if (!card) handleForbiddenError(res, 'Карточка уже удалена');
+
+      if (card.owner._id.toString() !== req.user._id.toString()) {
+        handleForbiddenError(res, 'Вы не можете удалить чужую карточку');
       }
+
+      Card.findByIdAndDelete({ _id })
+        .populate([
+          { path: 'owner', model: 'user' },
+        ])
+        .then((card) => { res.send({ data: card }); });
     })
     .catch((err) => handleErrors(err, res));
 };

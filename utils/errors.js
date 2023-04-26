@@ -2,6 +2,8 @@ const BAD_REQUEST = 400;
 const INTERNAL_SERVER_ERROR = 500;
 const NOT_FOUND = 404;
 const HTTP_STATUS_CONFLICT = 409;
+const UNAUTHORIZED = 401;
+const HTTP_STATUS_FORBIDDEN = 403;
 
 function handleErrors(error, response) {
   if (error.code === 11000) {
@@ -20,7 +22,11 @@ function handleErrorNotFound(response, string) {
 }
 
 function handleAuthErr(response, string) {
-  return response.status(401).send({ message: string });
+  return response.status(UNAUTHORIZED).send({ message: string });
+}
+
+function handleForbiddenError(response, string) {
+  return response.status(HTTP_STATUS_FORBIDDEN).send({ message: string });
 }
 
 module.exports = {
@@ -30,4 +36,5 @@ module.exports = {
   handleErrors,
   handleErrorNotFound,
   handleAuthErr,
+  handleForbiddenError,
 };
