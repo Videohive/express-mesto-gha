@@ -22,6 +22,19 @@ module.exports.getUsers = (req, res) => {
     .catch((err) => handleErrors(err, res));
 };
 
+module.exports.getCurrentUser = (req, res) => {
+  const { _id } = req.user;
+  User.findById({ _id })
+    .then((user) => {
+      if (user) {
+        res.status(200).send({ data: user });
+      } else {
+        handleErrorNotFound(res, 'Пользователь не найден');
+      }
+    })
+    .catch((err) => handleErrors(err, res));
+};
+
 module.exports.createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
@@ -38,19 +51,6 @@ module.exports.createUser = (req, res) => {
       .catch((err) => handleErrors(err, res));
   });
 };
-
-module.exports.getCurrentUser = (req, res) => {
-  User.findById(req.user._id)
-    .then((user) => {
-      if (user) {
-        res.status(200).send(user);
-      } else {
-        handleErrorNotFound(res, 'Пользователь не найден');
-      }
-    })
-    .catch((err) => handleErrors(err, res));
-};
-
 const updateUser = (req, res, updateData) => {
   User.findByIdAndUpdate(
     req.user._id,
@@ -87,7 +87,6 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      // ошибка аутентификации
       res
         .status(401)
         .send({ message: err.message });

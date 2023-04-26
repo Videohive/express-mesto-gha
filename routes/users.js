@@ -4,10 +4,10 @@ const {
   getUserById, getCurrentUser, getUsers, updateUserInfo, updateUserAvatar,
 } = require('../controllers/users');
 
+router.get('/me', getCurrentUser);
 router.get('/:userId', validateUserId, getUserById);
 router.get('/', getUsers);
 router.patch('/me', validateUserData, updateUserInfo);
 router.patch('/me/avatar', validateUserAvatar, updateUserAvatar);
-router.get('/me', getCurrentUser);
 
 module.exports = router;
