@@ -10,7 +10,7 @@ module.exports.getUserById = (req, res) => {
   User.findById({ _id })
     .then((user) => {
       if (user) {
-        res.send({ data: user });
+        res.send({ user });
       } else {
         handleErrorNotFound(res, 'Пользователь по указанному id не найден');
       }
@@ -20,7 +20,7 @@ module.exports.getUserById = (req, res) => {
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) => res.send({ users }))
     .catch((err) => handleErrors(err, res));
 };
 
@@ -29,7 +29,7 @@ module.exports.getCurrentUser = (req, res) => {
   User.findById({ _id })
     .then((user) => {
       if (user) {
-        res.status(200).send({ data: user });
+        res.status(200).send({ user });
       } else {
         handleErrorNotFound(res, 'Пользователь не найден');
       }
@@ -61,7 +61,7 @@ const updateUser = (req, res, updateData) => {
   )
     .then((user) => {
       if (user) {
-        res.send({ data: user });
+        res.send({ user });
       } else {
         handleErrorNotFound(res, 'Пользователь по указанному id не найден');
       }
