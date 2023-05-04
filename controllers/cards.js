@@ -6,7 +6,7 @@ module.exports.getCards = (req, res) => {
     .populate([
       { path: 'owner', model: 'user' },
     ])
-    .then((cards) => res.send({ cards }))
+    .then((cards) => res.send(cards))
     .catch((err) => handleErrors(err, res));
 };
 
@@ -15,7 +15,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user;
   Card.create({ name, link, owner })
     .then((card) => card.populate('owner'))
-    .then((card) => res.status(201).send({ card }))
+    .then((card) => res.status(201).send(card))
     .catch((err) => handleErrors(err, res));
 };
 
@@ -37,7 +37,7 @@ module.exports.deleteCard = (req, res) => {
         .populate([
           { path: 'owner', model: 'user' },
         ])
-        .then((deletedCard) => { res.send({ deletedCard }); });
+        .then((deletedCard) => { res.send(deletedCard); });
     })
     .catch((err) => handleErrors(err, res));
 };
@@ -50,7 +50,7 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (card) {
-        res.send({ card });
+        res.send(card);
       } else {
         handleErrorNotFound(res, 'Карточка с указанным id не найдена');
       }
@@ -66,7 +66,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (card) {
-        res.send({ card });
+        res.send(card);
       } else {
         handleErrorNotFound(res, 'Карточка с указанным id не найдена');
       }
