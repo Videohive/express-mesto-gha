@@ -3,9 +3,7 @@ const { handleErrors, handleErrorNotFound, handleForbiddenError } = require('../
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .populate([
-      { path: 'owner', model: 'user' },
-    ])
+    .populate(['owner', 'likes'])
     .then((cards) => res.send(cards))
     .catch((err) => handleErrors(err, res));
 };
@@ -23,9 +21,7 @@ module.exports.deleteCard = (req, res) => {
   const _id = req.params.cardId;
 
   Card.findOne({ _id })
-    .populate([
-      { path: 'owner', model: 'user' },
-    ])
+    .populate(['owner', 'likes'])
     .then((card) => {
       if (!card) handleErrorNotFound(res, 'Карточка не найдена');
 
